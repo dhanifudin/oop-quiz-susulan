@@ -1,0 +1,148 @@
+name: Autograding Tests
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  checks: write
+  actions: read
+  contents: read
+
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Equipment Constructor Test
+        id: test-equipment-constructor
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Equipment Constructor Test
+          command: mvn -q test -Dtest=EquipmentConstructorTest -DfailIfNoTests=true
+          timeout: 10
+          max-score: 5
+
+      - name: Equipment Getter Test
+        id: test-equipment-getter
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Equipment Getter Test
+          command: mvn -q test -Dtest=EquipmentGetterTest -DfailIfNoTests=true
+          timeout: 10
+          max-score: 5
+
+      - name: Equipment Encapsulation Test
+        id: test-equipment-encapsulation
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Equipment Encapsulation Test
+          command: mvn -q test -Dtest=EquipmentEncapsulationTest -DfailIfNoTests=true
+          timeout: 10
+          max-score: 10
+
+      - name: Renter Test
+        id: test-renter
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Renter Test
+          command: mvn -q test -Dtest=RenterTest -DfailIfNoTests=true
+          timeout: 10
+          max-score: 10
+
+      - name: Inventory Aggregation Test
+        id: test-inventory-aggregation
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Inventory Aggregation Test
+          command: mvn -q test -Dtest=InventoryAggregationTest -DfailIfNoTests=true
+          timeout: 10
+          max-score: 10
+
+      - name: RentalLine Class Structure Test
+        id: test-rentalline-class
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: RentalLine Class Structure Test
+          command: mvn -q test -Dtest=RentalLineClassTest -DfailIfNoTests=true
+          timeout: 10
+          max-score: 10
+
+      - name: RentalLine Subtotal Test
+        id: test-rentalline-subtotal
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: RentalLine Subtotal Test
+          command: mvn -q test -Dtest=RentalLineSubtotalTest -DfailIfNoTests=true
+          timeout: 10
+          max-score: 5
+
+      - name: Rental Class Structure Test
+        id: test-rental-class
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Rental Class Structure Test
+          command: mvn -q test -Dtest=RentalClassTest -DfailIfNoTests=true
+          timeout: 10
+          max-score: 10
+
+      - name: Rental Add Line Test
+        id: test-rental-addline
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Rental Add Line Test
+          command: mvn -q test -Dtest=RentalAddLineTest -DfailIfNoTests=true
+          timeout: 10
+          max-score: 10
+
+      - name: Rental Total Test
+        id: test-rental-total
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Rental Total Test
+          command: mvn -q test -Dtest=RentalTotalTest -DfailIfNoTests=true
+          timeout: 10
+          max-score: 10
+
+      - name: Rental Discount Test
+        id: test-rental-discount
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Rental Discount Test
+          command: mvn -q test -Dtest=RentalDiscountTest -DfailIfNoTests=true
+          timeout: 10
+          max-score: 5
+
+      - name: Clerk Test
+        id: test-clerk
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Clerk Test
+          command: mvn -q test -Dtest=ClerkTest -DfailIfNoTests=true
+          timeout: 10
+          max-score: 10
+
+      - name: Autograding Reporter
+        uses: classroom-resources/autograding-grading-reporter@v1
+        env:
+          TEST-EQUIPMENT-CONSTRUCTOR_RESULTS: "${{ steps.test-equipment-constructor.outputs.result }}"
+          TEST-EQUIPMENT-GETTER_RESULTS: "${{ steps.test-equipment-getter.outputs.result }}"
+          TEST-EQUIPMENT-ENCAPSULATION_RESULTS: "${{ steps.test-equipment-encapsulation.outputs.result }}"
+          TEST-RENTER_RESULTS: "${{ steps.test-renter.outputs.result }}"
+          TEST-INVENTORY-AGGREGATION_RESULTS: "${{ steps.test-inventory-aggregation.outputs.result }}"
+          TEST-RENTALLINE-CLASS_RESULTS: "${{ steps.test-rentalline-class.outputs.result }}"
+          TEST-RENTALLINE-SUBTOTAL_RESULTS: "${{ steps.test-rentalline-subtotal.outputs.result }}"
+          TEST-RENTAL-CLASS_RESULTS: "${{ steps.test-rental-class.outputs.result }}"
+          TEST-RENTAL-ADDLINE_RESULTS: "${{ steps.test-rental-addline.outputs.result }}"
+          TEST-RENTAL-TOTAL_RESULTS: "${{ steps.test-rental-total.outputs.result }}"
+          TEST-RENTAL-DISCOUNT_RESULTS: "${{ steps.test-rental-discount.outputs.result }}"
+          TEST-CLERK_RESULTS: "${{ steps.test-clerk.outputs.result }}"
+        with:
+          runners: test-equipment-constructor,test-equipment-getter,test-equipment-encapsulation,test-renter,test-inventory-aggregation,test-rentalline-class,test-rentalline-subtotal,test-rental-class,test-rental-addline,test-rental-total,test-rental-discount,test-clerk

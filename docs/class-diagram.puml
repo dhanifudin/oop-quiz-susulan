@@ -1,0 +1,67 @@
+@startuml class-diagram
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam class {
+  BackgroundColor White
+  ArrowColor Black
+  BorderColor Black
+}
+
+class Equipment {
+  - name : String
+  - dailyRate : double
+  + Equipment(name : String, dailyRate : double)
+  + getName() : String
+  + getDailyRate() : double
+  + setDailyRate(dailyRate : double) : void
+}
+
+class Renter {
+  - renterId : String
+  - name : String
+  + Renter(renterId : String, name : String)
+  + getRenterId() : String
+  + getName() : String
+  + setName(name : String) : void
+}
+
+class Inventory {
+  - stock : Equipment[]
+  - equipmentCount : int
+  + Inventory()
+  + addEquipment(equipment : Equipment) : void
+  + findEquipment(name : String) : Equipment
+  + getEquipmentCount() : int
+}
+
+class RentalLine <<create this class>> {
+  - equipment : Equipment
+  - days : int
+  + RentalLine(equipment : Equipment, days : int)
+  + getEquipment() : Equipment
+  + getDays() : int
+  + getSubtotal() : double
+}
+
+class Rental <<create this class>> {
+  - renter : Renter
+  - lines : RentalLine[]
+  - lineCount : int
+  + Rental(renter : Renter)
+  + getRenter() : Renter
+  + addLine(equipment : Equipment, days : int) : void
+  + getLineCount() : int
+  + getTotal() : double
+  + getFinalTotal() : double
+}
+
+class Clerk <<create this class>> {
+  + calculateChange(rental : Rental, cash : double) : double
+}
+
+Inventory o-- "0..10" Equipment : aggregation
+RentalLine "1..*" --> "1" Equipment : association
+Rental --> "1" Renter : association
+Rental *-- "0..10" RentalLine : composition\n(created inside addLine)
+Clerk ..> Rental : dependency\n(parameter only)
+@enduml
